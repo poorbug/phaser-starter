@@ -1,0 +1,65 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <meta charset="utf-8" >
+        <style>
+        </style>
+        <script src="./phaser.min.js"></script>
+    </head>
+    <body>
+        <script>
+            var tileSize = 32
+            var game = new Phaser.Game(12*tileSize, 20*tileSize, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
+            var map1, layer1, me, cursors
+
+            function preload() {
+                game.load.tilemap('map1', './resources/map.json', null, Phaser.Tilemap.TILED_JSON);
+                game.load.image('tile', './resources/tile.png');
+                game.load.spritesheet('me', './resources/normal.png', 48, 64, 16);
+                // game.load.atlas('me', './resources/normal.png', './resources/normal.json')
+            }
+
+            function create() {
+                game.physics.startSystem(Phaser.Physics.P2JS)
+                map1 = game.add.tilemap('map1')
+                map1.addTilesetImage('tile', 'tile')
+                layer1 = map1.createLayer('layer1')
+
+                me = game.add.sprite(0, 0, 'me', 0)
+                // me.width = 24
+                // me.height = 32
+                // me.scale.setTo(0.5)
+
+                game.physics.p2.enable(me)
+                cursors = game.input.keyboard.createCursorKeys();
+
+                me.animations.add('down', [0, 3], 10, true);
+                me.animations.add('left', [4, 7], 10, true);
+                me.animations.add('right', [8, 11], 10, true);
+                me.animations.add('up', [12, 15], 10, true);
+            }
+
+            function update() {
+                me.body.setZeroVelocity();
+                if (cursors.left.isDown) {
+                    me.play('left')
+                    me.body.moveLeft(300);
+                } else if (cursors.right.isDown) {
+                    me.play('right')
+                    me.body.moveRight(300);
+                } else if (cursors.up.isDown) {
+                    me.play('up')
+                    me.body.moveUp(300);
+                } else if (cursors.down.isDown) {
+                    me.play('down')
+                    me.body.moveDown(300);
+                } else {
+                    me.animations.stop()
+                }
+            }
+
+            function render() {
+            }
+        </script>
+    </body>
+</html>
